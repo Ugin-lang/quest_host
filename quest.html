@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Квест про Соню — Цифровой след</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --accent: #4f46e5;
+      --accent-soft: rgba(79, 70, 229, 0.3);
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --danger: #f97373;
+      --success: #22c55e;
+      --radius-lg: 16px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #000 55%);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to bottom, rgba(15,23,42,0.96), rgba(15,23,42,0.9), transparent);
+      border-bottom: 1px solid rgba(148,163,184,0.35);
+    }
+
+    .nav {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 10px 16px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      object-fit: cover;
+      box-shadow: 0 0 14px rgba(79,70,229,0.9);
+      border: 1px solid rgba(148,163,184,0.7);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      font-size: 12px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      border-color: rgba(148,163,184,0.8);
+      color: var(--text);
+      background: rgba(15,23,42,0.95);
+    }
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 18px 16px 40px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(20px, 3vw, 24px);
+    }
+
+    .muted { color: var(--muted); }
+
+    .card {
+      border-radius: var(--radius-lg);
+      background: rgba(15,23,42,0.97);
+      border: 1px solid rgba(148,163,184,0.5);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-soft);
+      font-size: 13px;
+    }
+
+    .quest-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      border: 1px solid rgba(148,163,184,0.65);
+      color: var(--muted);
+    }
+
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .pill-dot-yellow {
+      background: #eab308;
+      box-shadow: 0 0 8px rgba(234,179,8,0.85);
+    }
+
+    .progress-bar {
+      width: 160px;
+      height: 6px;
+      background: #020617;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(148,163,184,0.5);
+      margin-top: 4px;
+    }
+
+    .progress-inner {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(to right, #4f46e5, #22c55e);
+      transition: width 0.25s ease;
+    }
+
+    .fedya-intro {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .fedya-avatar-small {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(248,250,252,0.9);
+      box-shadow: 0 0 14px rgba(79,70,229,0.9);
+    }
+
+    .fedya-intro-text {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .levels {
+      display: grid;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .level {
+      border-radius: var(--radius-lg);
+      padding: 12px 13px 10px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: radial-gradient(circle at top right, rgba(15,118,110,0.26), transparent 55%),
+                  linear-gradient(to bottom right, rgba(15,23,42,0.98), rgba(15,23,42,0.97));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .level.locked {
+      opacity: 0.4;
+      pointer-events: none;
+      filter: grayscale(0.2);
+    }
+
+    .level.locked::after {
+      content: "Сначала пройди предыдущий шаг";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--muted);
+      background: rgba(15,23,42,0.85);
+    }
+
+    .level-header {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .level-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(248,250,252,0.9);
+      box-shadow: 0 0 12px rgba(79,70,229,0.9);
+      flex-shrink: 0;
+    }
+
+    .level-title {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+
+    .level-badge {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--muted);
+    }
+
+    .level-story {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .question {
+      margin-top: 4px;
+      font-size: 13px;
+    }
+
+    .options {
+      margin-top: 5px;
+      display: grid;
+      gap: 3px;
+    }
+
+    label.option {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 13px;
+      padding: 3px 5px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    label.option:hover {
+      background: rgba(15,23,42,0.96);
+    }
+
+    .level-footer {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .btn-small {
+      padding: 5px 11px;
+      font-size: 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148,163,184,0.8);
+      background: rgba(15,23,42,0.96);
+      color: var(--text);
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .btn-small:hover {
+      border-color: rgba(249,250,251,0.95);
+      background: rgba(15,23,42,1);
+    }
+
+    .result {
+      min-height: 16px;
+    }
+
+    .result.ok { color: var(--success); }
+    .result.fail { color: var(--danger); }
+
+    textarea {
+      width: 100%;
+      min-height: 70px;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.65);
+      background: rgba(15,23,42,0.96);
+      color: var(--text);
+      font-size: 13px;
+      padding: 7px;
+      resize: vertical;
+    }
+
+    textarea:focus,
+    input:focus {
+      outline: 1px solid var(--accent);
+      outline-offset: 1px;
+    }
+  </style>
+
+  <link rel="icon" type="image/png" href="1.png">
+</head>
+<body>
+<header>
+  <nav class="nav">
+    <div class="logo">
+      <img src="1.png" alt="Логотип Цифрового следа" class="logo-mark">
+      <span>Цифровой след</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Главная</a>
+      <a href="theory.html">Справка</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="card">
+    <div class="quest-header">
+      <div>
+        <h1>Квест: Account Defender</h1>
+        <p class="muted">
+          Четыре вопроса. На каждом Соня становится чуть менее наивной и чуть более защищённой.
+          Нельзя прыгнуть сразу в финал - сначала нужно разобрать её ошибки.
+        </p>
+      </div>
+      <div>
+        <div class="pill">
+          <span class="pill-dot pill-dot-yellow"></span>
+          Уровень защиты:
+        </div>
+        <div class="progress-bar">
+          <div class="progress-inner" id="progress-inner"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="levels">
+      <!-- Шаг 1 -->
+      <article class="level" data-level="1">
+        <div class="level-header">
+          <img src="2.png" alt="Соня: обычный вид" class="level-avatar">
+          <div style="flex:1;">
+            <div class="level-title">
+              <span>Шаг 1. Ночная драма Сони</span>
+              <span class="level-badge">старт</span>
+            </div>
+            <p class="level-story">
+              Ночь. Соня спит, телефон на зарядке. В 02:14 прилетает пуш:
+              «Выполнен вход с нового устройства». Потом: «Пароль изменён».
+              Утром чат забит: «Сонь, ты зачем скинула рекламу скама?»
+            </p>
+          </div>
+        </div>
+        <p class="level-story">
+          Её ник - <strong>sonya_2009</strong>, пароль - <strong>sonya2009</strong>.
+          В профиле открыто: дата рождения, школа, любимое кафе, куча фоток с геолокацией.
+        </p>
+        <div class="question">
+          Самый реалистичный сценарий взлома здесь — какой?
+        </div>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="q1" value="a">
+            <span>Кто-то взломал сервер соцсети именно ради Сони.</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q1" value="b">
+            <span>Пароль совпадает с ником и годом рождения, всё видно из её профиля, пароль просто подобрали.</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q1" value="c">
+            <span>Телефон решил начать новую жизнь и сам сменил пароль.</span>
+          </label>
+        </div>
+        <div class="level-footer">
+          <button class="btn-small" onclick="checkAnswer(1, 'b')">Проверить</button>
+          <div id="result-1" class="result"></div>
+        </div>
+      </article>
+
+      <!-- Шаг 2 -->
+      <article class="level locked" data-level="2">
+        <div class="level-header">
+          <img src="2.png" alt="Соня: первые неоновые акценты" class="level-avatar">
+          <div style="flex:1;">
+            <div class="level-title">
+              <span>Шаг 2. Соня включает мозг</span>
+              <span class="level-badge">пароли и 2FA</span>
+            </div>
+            <p class="level-story">
+              Она восстанавливает доступ через почту. Становится немного злее и умнее.
+              В настройках всплывают пункты: смена пароля, двухфакторка, «запомнить устройство».
+            </p>
+          </div>
+        </div>
+        <p class="level-story">
+          В голове Сони крутятся варианты: «поставить что-то посложнее», «сделать один суперпароль на всё»,
+          «включить 2FA, но это же долго».
+        </p>
+        <div class="question">
+          Какой набор действий реально усложнит жизнь тому, кто захочет её взломать ещё раз?
+        </div>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="q2" value="a">
+            <span>Оставить старый пароль, но сменить аву на аниме-девочку, чтобы её «не узнали».</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q2" value="b">
+            <span>Придумать один супердлинный пароль и использовать его на всех сайтах.</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q2" value="c">
+            <span>Сделать уникальный пароль для аккаунта, включить 2FA и не логиниться на рандомных чужих устройствах.</span>
+          </label>
+        </div>
+        <div class="level-footer">
+          <button class="btn-small" onclick="checkAnswer(2, 'c')">Проверить</button>
+          <div id="result-2" class="result"></div>
+        </div>
+      </article>
+
+      <!-- Шаг 3 -->
+      <article class="level locked" data-level="3">
+        <div class="level-header">
+          <img src="2.png" alt="Соня: наполовину киберпанк" class="level-avatar">
+          <div style="flex:1;">
+            <div class="level-title">
+              <span>Шаг 3. Соня смотрит на себя глазами хакера</span>
+              <span class="level-badge">OSINT и цифровой след</span>
+            </div>
+            <p class="level-story">
+              Теперь она делает то, что обычно делают по отношению к ней: заходит в поиск и пробивает собственный ник.
+              Находит старые профили, фотки, геометки, посты «я дома одна».
+            </p>
+          </div>
+        </div>
+        <p class="level-story">
+          Половина информации для таргетной атаки лежит в открытом доступе. Из этого можно собрать расписание,
+          привычные маршруты и варианты паролей.
+        </p>
+        <div class="question">
+          Какие типы открытых данных больше всего радуют того, кто делает OSINT по Соне?
+        </div>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="q3" value="a">
+            <span>Мемы без подписи, которые не лайкает даже лучший друг.</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q3" value="b">
+            <span>Посты с датой рождения, школой, классом, геолокацией, фотками расписаний и билетов.</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="q3" value="c">
+            <span>Только прямые сообщения, которые Соня сама отправила злоумышленнику.</span>
+          </label>
+        </div>
+        <div class="level-footer">
+          <button class="btn-small" onclick="checkAnswer(3, 'b')">Проверить</button>
+          <div id="result-3" class="result"></div>
+        </div>
+      </article>
+
+      <!-- Шаг 4 -->
+      <article class="level locked" data-level="4">
+        <div class="level-header">
+          <img src="2.png" alt="Соня: киберпанк-версия" class="level-avatar">
+          <div style="flex:1;">
+            <div class="level-title">
+              <span>Шаг 4. Киберпанк-Соня и твой список правил</span>
+              <span class="level-badge">финал</span>
+            </div>
+            <p class="level-story">
+              На этом шаге Соня уже не просто жертва. Она понимает, где накосячила, и меняет поведение.
+              Теперь очередь за тобой: что ты готов сделать по-нормальному?
+            </p>
+          </div>
+        </div>
+        <div class="question">
+          Напиши 3–5 конкретных действий, которые ты реально готов делать,
+          чтобы твой цифровой след не превратился в открытую карту для атаки.
+        </div>
+        <p class="muted" style="margin-top:4px;">
+          Это не тест с «правильным вариантом», а часть проекта. Эту штуку можно показывать
+          учителю на защите: «вот мой личный чек-лист».
+        </p>
+        <textarea id="checklist" placeholder="Например: 1) отключу геолокацию в открытых сторис; 2) заведу менеджер паролей; 3) пересмотрю, что видно в профиле незнакомцам..."></textarea>
+        <div class="level-footer">
+          <button class="btn-small" onclick="finishQuest()">Завершить квест</button>
+          <div id="result-4" class="result"></div>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<script>
+  const totalLevels = 4;
+  let completedLevels = 0;
+  const progressEl = document.getElementById('progress-inner');
+
+  function updateProgress() {
+    const percent = (completedLevels / totalLevels) * 100;
+    progressEl.style.width = percent + '%';
+  }
+
+  function unlockLevel(levelNumber) {
+    const level = document.querySelector('.level[data-level="' + levelNumber + '"]');
+    if (level && level.classList.contains('locked')) {
+      level.classList.remove('locked');
+    }
+  }
+
+  function checkAnswer(level, correctValue) {
+    const selected = document.querySelector('input[name="q' + level + '"]:checked');
+    const resultEl = document.getElementById('result-' + level);
+
+    if (!selected) {
+      resultEl.textContent = 'Сначала выбери вариант.';
+      resultEl.className = 'result fail';
+      return;
+    }
+
+    if (selected.value === correctValue) {
+      if (!resultEl.classList.contains('ok')) {
+        completedLevels++;
+      }
+      resultEl.textContent = 'Окей, логика сходится. Двигаемся дальше.';
+      resultEl.className = 'result ok';
+      unlockLevel(level + 1);
+      updateProgress();
+    } else {
+      resultEl.textContent = 'Есть вариант, который лучше объясняет взлом. Подумай ещё.';
+      resultEl.className = 'result fail';
+    }
+  }
+
+  function finishQuest() {
+    const text = document.getElementById('checklist').value.trim();
+    const resultEl = document.getElementById('result-4');
+
+    const lines = text.split('\n').filter(l => l.trim().length > 0);
+
+    if (lines.length < 3 || text.length < 35) {
+      resultEl.textContent = 'Сделай хотя бы 3 нормальных пункта, чтобы это не выглядело как отмазка.';
+      resultEl.className = 'result fail';
+      return;
+    }
+
+    if (!resultEl.classList.contains('ok')) {
+      completedLevels++;
+    }
+    resultEl.textContent = 'Готово. У тебя есть свой чек-лист, а у Сони — киберпанк-версия без дыр в безопасности.';
+    resultEl.className = 'result ok';
+    updateProgress();
+  }
+
+  updateProgress();
+</script>
+</body>
+</html>

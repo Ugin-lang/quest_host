@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Цифровой след — квест про Соню</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --accent: #4f46e5;
+      --accent-soft: rgba(79, 70, 229, 0.3);
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --radius-lg: 16px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #000 55%);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    /* Шапка */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to bottom, rgba(15,23,42,0.96), rgba(15,23,42,0.9), transparent);
+      border-bottom: 1px solid rgba(148,163,184,0.35);
+    }
+
+    .nav {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 10px 16px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      object-fit: cover;
+      box-shadow: 0 0 14px rgba(79,70,229,0.9);
+      border: 1px solid rgba(148,163,184,0.7);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      font-size: 12px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      border-color: rgba(148,163,184,0.8);
+      color: var(--text);
+      background: rgba(15,23,42,0.95);
+    }
+
+    /* Контент */
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 18px 16px 40px;
+    }
+
+    .hero {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.1fr);
+      gap: 20px;
+      align-items: center;
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .hero-text {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background:
+        radial-gradient(circle at top left, rgba(79,70,229,0.22), transparent 55%),
+        linear-gradient(to bottom right, rgba(15,23,42,0.98), rgba(15,23,42,0.95));
+      box-shadow: var(--shadow-soft);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148,163,184,0.7);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+      background: rgba(15,23,42,0.9);
+    }
+
+    .eyebrow-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34,197,94,0.9);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(22px, 3.2vw, 26px);
+    }
+
+    .hero-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 520px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 12px 0 16px;
+    }
+
+    .tag {
+      font-size: 10px;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148,163,184,0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--muted);
+    }
+
+    .ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .btn {
+      border-radius: var(--radius-pill);
+      padding: 8px 14px;
+      font-size: 13px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #4f46e5, #6366f1);
+      color: white;
+      box-shadow: 0 12px 26px rgba(79,70,229,0.75);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: rgba(148,163,184,0.7);
+      color: var(--muted);
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(249,250,251,0.9);
+      color: var(--text);
+      background: rgba(15,23,42,0.96);
+    }
+
+    .hero-panel {
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.45);
+      padding: 14px;
+      background:
+        radial-gradient(circle at top right, rgba(79,70,229,0.32), transparent 55%),
+        linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+      box-shadow: var(--shadow-soft);
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .muted { color: var(--muted); }
+
+    .fedya-card {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .fedya-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(248,250,252,0.9);
+      box-shadow: 0 0 18px rgba(79,70,229,0.9);
+    }
+
+    .fedya-meta {
+      font-size: 12px;
+    }
+
+    .fedya-name {
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .fedya-tags {
+      margin: 2px 0 0;
+      color: var(--muted);
+    }
+
+    .log {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      background: rgba(15,23,42,0.95);
+      border-radius: 10px;
+      padding: 8px 10px;
+      border: 1px solid rgba(30,64,175,0.9);
+    }
+
+    .log-line { margin: 1px 0; }
+    .log-tag { color: #38bdf8; }
+
+    section {
+      margin-top: 26px;
+    }
+
+    .card {
+      border-radius: 16px;
+      background: rgba(15,23,42,0.97);
+      border: 1px solid rgba(148,163,184,0.4);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-soft);
+      font-size: 13px;
+    }
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    ul {
+      margin: 6px 0 0;
+      padding-left: 18px;
+    }
+
+    footer {
+      margin-top: 18px;
+      font-size: 11px;
+      color: var(--muted);
+      border-top: 1px solid rgba(148,163,184,0.4);
+      padding-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+  </style>
+
+  <!-- фавикон, если хочешь -->
+  <link rel="icon" type="image/png" href="logo.png">
+</head>
+<body>
+<header>
+  <nav class="nav">
+    <div class="logo">
+      <img src="1.png" alt="Логотип Цифрового следа" class="logo-mark">
+      <span>Цифровой след</span>
+    </div>
+    <div class="nav-links">
+      <a href="quest.html">Квест про Соню</a>
+      <a href="theory.html">Справка</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-text">
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        интерактив про цифровую безопасность
+      </div>
+      <h1>Соню взломали. Твоя задача — вернуть ей контроль и прокачать мозги.</h1>
+      <p class="hero-subtitle">
+        Здесь ты увидишь, как обычная школьница, которая просто любит постить сторис,
+        превращается в аккуратную киберпанк-версию себя: с нормальными паролями,
+        аккуратным цифровым следом и пониманием, как не быть лёгкой целью.
+      </p>
+
+      <div class="hero-tags">
+        <span class="tag">пароли</span>
+        <span class="tag">2FA</span>
+        <span class="tag">osint</span>
+        <span class="tag">соцсети</span>
+      </div>
+
+      <div class="ctas">
+        <a href="quest.html"><button class="btn btn-primary" type="button">Войти в квест</button></a>
+        <a href="theory.html"><button class="btn btn-ghost" type="button">Сначала теория</button></a>
+      </div>
+    </div>
+
+    <aside class="hero-panel">
+      <div class="fedya-card">
+        <img src="2.png" alt="Соня — обычная школьница" class="fedya-avatar">
+        <div class="fedya-meta">
+          <p class="fedya-name">Соня, 9 класс</p>
+          <p class="fedya-tags">
+            ник: <strong>sonya_2009</strong><br>
+            статус: «живу в сторис, пароль “sonya2009”»
+          </p>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-top:8px;">
+        Школа, друзья, TikTok, фотки с тренировок, вечные переписки. Профиль открыт, дата рождения
+        и школа торчат во всех соцсетях. На ночь телефон просто бросает на зарядку — без блокировки по отпечатку.
+      </p>
+
+      <div class="log">
+        <div class="log-line"><span class="log-tag">&gt;</span> Её цифровой след — как открытая книга.</div>
+        <div class="log-line"><span class="log-tag">&gt;</span> В этом квесте ты разберёшься, где Соня сама подставила себя, и как из обычной школьницы сделать киберпанк-юзера с мозгами.</div>
+      </div>
+    </aside>
+  </section>
+
+  <section>
+    <div class="card">
+      <h2>Что ты здесь сделаешь</h2>
+      <ul>
+        <li>Пройдёшь сюжетный квест про взлом аккаунта Сони и её путь к защите.</li>
+        <li>Поймёшь, как её посты и сторис превращаются в данные для атаки.</li>
+        <li>Соберёшь базовый набор защиты: пароли, 2FA, приватность.</li>
+        <li>Составишь свой список правил поведения в сети, чтобы не повторить Сонины ошибки.</li>
+      </ul>
+
+      <footer>
+        <span>Контакты: cfrovoisled@gmail.com</span>
+      </footer>
+    </div>
+  </section>
+</main>
+</body>
+</html>
